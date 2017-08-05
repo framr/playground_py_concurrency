@@ -1,1 +1,26 @@
 Reproducing stuff from D.Beazley talk "Concurrency from the ground up" (a great one!) 
+
+There are few servers here
+- threading server handles each client connection in a separate thread
+- process pool server - again handles each client in a separate thread, but in addition it performs the calculations using process pool 
+(although in a blocking way)
+
+To try server you may type in:
+nc localhost 25000
+30
+
+
+In addition there are two scripts for performance testing
+perf1.py measures time required to execute computation heavy request, fib(30)
+perf2.py measures rps for light requests, fib(1)
+
+When only one client present, threading server is able to handle very high rps-s.
+However, if there is another client rps drops by enormous factor. This is because 
+1) GIL
+2) when passing control to another thread prioritizes heavy computations (this is opposite to what os is normally doing)
+
+In case of process pool server rps for one clients is way lower because of overhead for spawning process.
+But it is much more stable in case of two cliens, because the computations are handled by different processes.
+
+ 
+
