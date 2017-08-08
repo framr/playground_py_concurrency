@@ -35,8 +35,9 @@ def fib_server(address):
     while True:
         client, addr = sock.accept()
         print("connection", addr)
-        Process(target=fib_handler, args=(client,)).start()
- 
+        proc = Process(target=fib_handler, args=(client,))
+        proc.daemon = True
+        proc.start()
 
 if __name__ == '__main__':
 

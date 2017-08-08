@@ -30,7 +30,9 @@ def fib_server(address):
     while True:
         client, addr = sock.accept()
         print "connection", addr
-        Thread(target=fib_handler, args=(client,)).start()
+        t = Thread(target=fib_handler, args=(client,))
+        t.daemon = True
+        t.start()
  
 
 if __name__ == '__main__':
