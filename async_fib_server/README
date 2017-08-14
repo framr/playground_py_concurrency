@@ -15,7 +15,7 @@ perf1.py measures time required to execute computation heavy request, fib(30)
 perf2.py measures rps for light requests, fib(1)
 
 
-1. Threading server. Clients handles in separate threads.
+1. Threading server. Clients handled in separate threads.
 When only one client present, threading server is able to handle very high rps-s.
 However, if there is another client rps drops by enormous factor. This is because 
 a) GIL
@@ -27,7 +27,7 @@ In case of process pool server rps for one clients is way lower because of overh
 But it is much more stable in case of two cliens, because the computations are handled by different processes.
 3.3 krps, minor drop under parallel heavy computations.
 
-3. Vanilla process server. Each client is handles in a new process.
+3. Vanilla process server. Each client is handled in a new process.
 This is actually the fastest server, when measured by our performance scripts (because we have only two clients, process creation overhead is low
 and we enjoy alse pure process parallelism).
 57 krps for light requests, almost no performance drop under parallel heavy computations.
