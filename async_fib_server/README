@@ -33,4 +33,13 @@ and we enjoy alse pure process parallelism).
 57 krps for light requests, almost no performance drop under parallel heavy computations.
  
  
+4. Async server v1
+The first version is quite simple.
+- we utilize the yield statement to pause the program execution just before the i/o.
+- we use select.select to get a signal that the program execution somewhere can be resumed
+- we introduce an event loop which runs the program by pushing sockets into the waiting area, popping them out of there and advancing the program
+execution afterwards.
 
+
+5. Async server v2
+give a decription here
