@@ -20,22 +20,24 @@ def run(tasks):
     while any([tasks, waiters_recv, waiters_send]):
 
         # wait for i/o
-        if not tasks:
+        while not tasks:
             can_recv, can_send, _ = select(waiters_recv, waiters_send, [])
-            if can_recv:
-                tasks.extend([waiters_recv[x] for x in can_recv])
-            if can_send:
-                tasks.extend([waiters_send[x] for x in can_send])
+            for s in can_recv:
+                tasks.append(waiters_recv.pop(s))
+            for s in can_send:
+                tasks.append(waiters_send.pop(s))
+
+
 
         # process tasks
+  
+        task = tasks.popleft()
         try:
-            task = tasks.popleft()
             why, who = next(task)
-
             if why == "recv":
-                waiters_recv[who.fileno()] = task
+                waiters_recv[who] = task
             elif why == "send":
-                waiters_send[who.fileno()] = task
+                waiters_send[who] = task
             else:
                 raise ValueError("wrong task type, should be recv or send")
 
