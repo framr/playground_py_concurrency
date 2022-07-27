@@ -55,6 +55,33 @@ async def async_main_v4() -> None:
         print("oops, your time is over")
 
 
+async def keep_printing_catch_cancel(name: str="") -> None:
+    while True:
+        print(name, end=" ")
+        print_now()
+        try:
+            await asyncio.sleep(0.5)
+        except asyncio.CancelledError:
+            print(name, "was canceled!")
+            break
+
+
+async def async_main_v5() -> None:
+    try:
+        await asyncio.wait_for(
+            asyncio.gather(
+                keep_printing("first"),
+                keep_printing("second"),
+                keep_printing("third")
+            ),
+            5
+        )
+    except asyncio.TimeoutError:
+        print("oops, your time is over")
+
+
+
+
 if __name__ == "__main__":
 
 
@@ -81,7 +108,13 @@ if __name__ == "__main__":
 
 
 # Example: Combine asyncio.gather with wait_for for timeout
-    asyncio.run(async_main_v4())
+# Graceful, but we still see cancellation error -> Cancelation exception
+# If gather is canceled, all awaitables are also canceled
+#    asyncio.run(async_main_v4())
+
+# Example: Catch CancelledError
+    asyncio.run(async_main_v5())
+
 
 
 
